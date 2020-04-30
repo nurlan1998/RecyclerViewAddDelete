@@ -93,49 +93,38 @@ class MainActivity : AppCompatActivity() {
         }
         optionMenu.show()
     }
-
+//
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        menuInflater.inflate(R.menu.main_menu,menu)
 //        val searchItem: MenuItem = menu.findItem(R.id.action_search)
-//        if(searchItem != null){
-//            searchView?.setOnCloseListener (SearchView.OnCloseListener { true })
-//            val searchPlate = searchView?.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
-//            searchPlate.hint = "Search"
-//            val searchPlateView: View =
-//                searchView!!.findViewById(androidx.appcompat.R.id.search_plate)
-//            searchPlateView.setBackgroundColor(ContextCompat.getColor(this,
-//                android.R.color.transparent
-//                )
-//            )
-//            searchView!!.setOnQueryTextListener(object :
-//            SearchView.OnQueryTextListener{
-//                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    return false
-//                }
+//        searchView?.queryHint = "Search"
+//        searchView?.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
 //
-//                override fun onQueryTextChange(newText: String?): Boolean {
-//                    adapter.filter.filter(newText)
-//                    return true
-//                }
-//            })
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                adapter.filter.filter(newText)
+//                return true
+//            }
+//        })
 //            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//            searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//        }
+//        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 //        return super.onCreateOptionsMenu(menu)
 //    }
 //
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if(item!!.itemId == R.id.action_search){
+//        if(item.itemId == R.id.action_search){
 //            return true
 //        }
 //        return super.onOptionsItemSelected(item)
 //    }
-////
-////    override fun onBackPressed() {
-////        if(!searchView?.isIconified!!){
-////            searchView?.isIconified ?:  = true
-////            return
-////        }
-////        super.onBackPressed()
-////    }
+//
+//    override fun onBackPressed() {
+//        if(!searchView?.isIconified!!){
+//            searchView?.isIconified ?:  = true
+//            return
+//        }
+//        super.onBackPressed()
+//    }
 }

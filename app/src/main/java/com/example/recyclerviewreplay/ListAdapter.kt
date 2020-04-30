@@ -65,7 +65,7 @@ class ListAdapter(var activity: MainActivity) : RecyclerView.Adapter<ListAdapter
 //            }
 //
 //            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-//                userFilterList = results!!.values as MutableList<User>
+//                userFilterList = results?.values as MutableList<User>
 //                notifyDataSetChanged()
 //            }
 //        }
