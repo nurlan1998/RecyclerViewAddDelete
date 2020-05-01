@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_add.*
 import kotlinx.android.synthetic.main.dialog_add.view.*
+import kotlinx.android.synthetic.main.dialog_rating.*
+import kotlinx.android.synthetic.main.dialog_rating.view.*
+import kotlinx.android.synthetic.main.dialog_rating.view.btnOk
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,81 +31,95 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        setData(1)
+            setData(1)
 
-        val itemTouchHelperCallBack = object :
-        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
+            val itemTouchHelperCallBack = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    adapter.removeUser(viewHolder.adapterPosition)
+                }
             }
+            val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
+            itemTouchHelper.attachToRecyclerView(recyclerView)
+        }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                adapter.removeUser(viewHolder.adapterPosition)
+        fun setData(count: Int) {
+            for (i in 0 until count) {
+                val user = User()
+                user.title = "Title${i + 1}"
+                user.description = "Description${i + 1}"
+                models.add(user)
             }
+            adapter.setData(models)
         }
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
 
-    fun setData(count:Int){
-        for(i in 0 until count){
-            val user = User()
-            user.title = "Title${i+1}"
-            user.description = "Description${i+1}"
-            models.add(user)
-        }
-        adapter.setData(models)
-    }
-
-    fun onOptionButtonClick(view: View,position:Int){
-        val optionMenu = PopupMenu(this,view)
-        val menuInflater = optionMenu.menuInflater
-        menuInflater.inflate(R.menu.main_menu,optionMenu.menu)
-        optionMenu.setOnMenuItemClickListener {
-            when(it.itemId) {
-                R.id.action_add -> {
-                    val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add,null)
-                    val mBuilder = AlertDialog.Builder(this)
-                        .setView(mDialogView)
-                    val mAlertDialog = mBuilder.show()
-                    mDialogView.btnAdd.setOnClickListener {
-                        mAlertDialog.dismiss()
-                        val name = mDialogView.userName.text.toString()
-                        val lastName = mDialogView.lastName.text.toString()
-                        if(name.isNotEmpty() && lastName.isNotEmpty()) {
-                            adapter.addUser(position, name, lastName)
-                        }else{
-                            Toast.makeText(this,"Заполните поля",Toast.LENGTH_SHORT).show()
+        fun onOptionButtonClick(view: View, position: Int) {
+            val optionMenu = PopupMenu(this, view)
+            val menuInflater = optionMenu.menuInflater
+            menuInflater.inflate(R.menu.main_menu, optionMenu.menu)
+            optionMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_add -> {
+                        val mDialogView =
+                            LayoutInflater.from(this).inflate(R.layout.dialog_add, null)
+                        val mBuilder = AlertDialog.Builder(this)
+                            .setView(mDialogView)
+                        val mAlertDialog = mBuilder.show()
+                        mDialogView.btnAdd.setOnClickListener {
+                            mAlertDialog.dismiss()
+                            val name = mDialogView.userName.text.toString()
+                            val lastName = mDialogView.lastName.text.toString()
+                            if (name.isNotEmpty() && lastName.isNotEmpty()) {
+                                adapter.addUser(position, name, lastName)
+                            } else {
+                                Toast.makeText(this, "Заполните поля", Toast.LENGTH_SHORT).show()
+                            }
                         }
-                    }
-                    mDialogView.btnCancel.setOnClickListener {
-                        mAlertDialog.dismiss()
-                    }
+                        mDialogView.btnCancel.setOnClickListener {
+                            mAlertDialog.dismiss()
+                        }
 //                    adapter.addUser(position)
-                }
-                R.id.action_delete -> {
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("Delete")
-                    builder.setMessage("You want to delete?")
-                    builder.setPositiveButton(R.string.yes){ dialog, which ->
-                        adapter.removeUser(position)
                     }
-                    builder.setNegativeButton(R.string.no){dialog, which ->
-                        dialog.dismiss()
+                    R.id.action_delete -> {
+                        val builder = AlertDialog.Builder(this)
+                        builder.setTitle("Delete")
+                        builder.setMessage("You want to delete?")
+                        builder.setPositiveButton(R.string.yes) { dialog, which ->
+                            adapter.removeUser(position)
+                        }
+                        builder.setNegativeButton(R.string.no) { dialog, which ->
+                            dialog.dismiss()
+                        }
+                        builder.show()
                     }
-                    builder.show()
                 }
+                return@setOnMenuItemClickListener true
             }
-            return@setOnMenuItemClickListener true
+            optionMenu.show()
         }
-        optionMenu.show()
+
+    override fun onBackPressed() {
+        val dialogRatingView = LayoutInflater.from(this).inflate(R.layout.dialog_rating, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialogRatingView)
+        val alertDialog = builder.show()
+        dialogRatingView.btnOk.setOnClickListener {
+            alertDialog.dismiss()
+            Toast.makeText(this, "rating", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {

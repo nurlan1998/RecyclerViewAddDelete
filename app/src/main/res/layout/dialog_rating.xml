@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="Do you like this app?"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:layout_marginTop="4dp"
+        android:textSize="21sp"
+        android:textColor="#232F34"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:layout_marginTop="4dp"
+        android:stepSize="0.5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnOk"
+        android:layout_gravity="center"
+        android:text="Ok"
+        android:layout_marginTop="4dp"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
