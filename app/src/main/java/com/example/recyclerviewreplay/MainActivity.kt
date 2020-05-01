@@ -1,5 +1,6 @@
 package com.example.recyclerviewreplay
 
+import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
 
-        setData(0,1)
+        setData(1)
 
         val itemTouchHelperCallBack = object :
         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
@@ -43,15 +44,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                deleteData(viewHolder.adapterPosition)
+                adapter.removeUser(viewHolder.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallBack)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    fun setData(size:Int,count:Int){
-        for(i in size until count+size){
+    fun setData(count:Int){
+        for(i in 0 until count){
             val user = User()
             user.title = "Title${i+1}"
             user.description = "Description${i+1}"
@@ -59,34 +60,27 @@ class MainActivity : AppCompatActivity() {
         }
         adapter.setData(models)
     }
-    fun addData(size:Int){
-        val user = User()
-        user.title = "Title${size+1}"
-        user.description = "Description${size+1}"
-        models.add(user)
-        adapter.setData(models)
-    }
-    fun deleteData(position: Int){
-        val animation = AnimationUtils.loadAnimation(this,R.anim.fade_text)
-        models.removeAt(position)
-        adapter.notifyItemRemoved(position)
-    }
 
-    fun onItemClicked(size:Int,position:Int){
-        Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show()
-        setData(size,position+1)
-    }
-    fun onOptionButtonClick(view: View,size: Int,position:Int){
+    fun onOptionButtonClick(view: View,position:Int){
         val optionMenu = PopupMenu(this,view)
         val menuInflater = optionMenu.menuInflater
         menuInflater.inflate(R.menu.main_menu,optionMenu.menu)
         optionMenu.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.id.action_add -> {
-                    addData(size)
+                    adapter.addUser(position)
                 }
                 R.id.action_delete -> {
-                    deleteData(position)
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Delete")
+                    builder.setMessage("You want to delete?")
+                    builder.setPositiveButton(android.R.string.yes){ dialog, which ->
+                        adapter.removeUser(position)
+                    }
+                    builder.setNegativeButton(android.R.string.no){dialog, which ->
+                        dialog.dismiss()
+                    }
+                    builder.show()
                 }
             }
             return@setOnMenuItemClickListener true

@@ -10,13 +10,25 @@ import kotlinx.android.synthetic.main.item.view.*
 
 class ListAdapter(var activity: MainActivity) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
-    var models: List<User> = listOf()
+    var models: MutableList<User> = mutableListOf()
 //    var userFilterList: List<User> = listOf()
 
-    fun setData(data : List<User>){
+    fun setData(data : MutableList<User>){
         models = data
 //        this.models = userFilterList
         notifyDataSetChanged()
+    }
+
+    fun addUser(position: Int){
+        models.add(position, User("Title ${models.size+1}", "Description${models.size+1}"))
+        notifyItemInserted(position)
+        notifyItemRangeChanged(position,models.size)
+    }
+
+    fun removeUser(position: Int){
+        models.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position,models.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -37,10 +49,7 @@ class ListAdapter(var activity: MainActivity) : RecyclerView.Adapter<ListAdapter
             itemView.tvTitle.text = user.title
             itemView.tvDescription.text = user.description
 
-            itemView.setOnClickListener {
-                activity.onItemClicked(size, position)
-            }
-            itemView.btnOption.setOnClickListener {activity.onOptionButtonClick(itemView.btnOption,size,position)}
+            itemView.btnOption.setOnClickListener {activity.onOptionButtonClick(itemView.btnOption,position)}
         }
     }
 //
