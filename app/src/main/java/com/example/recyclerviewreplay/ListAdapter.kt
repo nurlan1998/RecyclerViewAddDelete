@@ -19,8 +19,8 @@ class ListAdapter(var activity: MainActivity) : RecyclerView.Adapter<ListAdapter
         notifyDataSetChanged()
     }
 
-    fun addUser(position: Int){
-        models.add(position, User("Title ${models.size+1}", "Description${models.size+1}"))
+    fun addUser(position: Int,name:String,lastName:String){
+        models.add(position, User(name,lastName))
         notifyItemInserted(position)
         notifyItemRangeChanged(position,models.size)
     }

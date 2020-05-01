@@ -5,9 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -16,6 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_add.*
+import kotlinx.android.synthetic.main.dialog_add.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -68,16 +68,33 @@ class MainActivity : AppCompatActivity() {
         optionMenu.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.id.action_add -> {
-                    adapter.addUser(position)
+                    val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add,null)
+                    val mBuilder = AlertDialog.Builder(this)
+                        .setView(mDialogView)
+                    val mAlertDialog = mBuilder.show()
+                    mDialogView.btnAdd.setOnClickListener {
+                        mAlertDialog.dismiss()
+                        val name = mDialogView.userName.text.toString()
+                        val lastName = mDialogView.lastName.text.toString()
+                        if(name.isNotEmpty() && lastName.isNotEmpty()) {
+                            adapter.addUser(position, name, lastName)
+                        }else{
+                            Toast.makeText(this,"Заполните поля",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    mDialogView.btnCancel.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+//                    adapter.addUser(position)
                 }
                 R.id.action_delete -> {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("Delete")
                     builder.setMessage("You want to delete?")
-                    builder.setPositiveButton(android.R.string.yes){ dialog, which ->
+                    builder.setPositiveButton(R.string.yes){ dialog, which ->
                         adapter.removeUser(position)
                     }
-                    builder.setNegativeButton(android.R.string.no){dialog, which ->
+                    builder.setNegativeButton(R.string.no){dialog, which ->
                         dialog.dismiss()
                     }
                     builder.show()
